@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Richard Clark" />
+  <title>Using Web Application Frameworks</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="../reveal.js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <link rel="stylesheet" href="../reveal.js/css/theme/simple.css" id="theme">
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+      if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = '../reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+      }
+    </script>
+    <!--[if lt IE 9]>
+    <script src="../reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <!-- Override the reveal.js styles -->
+    <style type="text/css">
+    	.reveal h1 { font-size: 2.00em; -webkit-hyphens: none; -moz-hyphens: none; }
+    	.reveal h2 { font-size: 1.50em; -webkit-hyphens: none; -moz-hyphens: none; }
+    </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Using Web Application Frameworks</h1>
+    <h2 class="author">Richard Clark</h2>
+    <h3 class="date"></h3>
+</section>
+
+<section><section id="single-page-applications" class="titleslide slide level1"><h1>Single-Page Applications</h1></section><section id="a-trivial-spa" class="slide level2">
+<h1>A trivial SPA</h1>
+<p><a href="./examples/1.1-trivial-spa.html">Demo here</a></p>
+</section><section id="a-trivial-spa-html" class="slide level2">
+<h1>A trivial SPA (HTML)</h1>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;meta charset=utf-8&gt;
+&lt;title&gt;A Trivial Single-Page App&lt;/title&gt;
+&lt;form id=request&gt;
+Hi there. What is your name? &lt;input type=text autofocus&gt;
+&lt;/form&gt;
+&lt;div id=response style=&quot;display:none&quot; /&gt;
+&lt;template style=&quot;display:none&quot;&gt;Welcome, {name}!&lt;/template&gt;
+&lt;script&gt;
+// See next slide
+&lt;/script&gt;</code></pre>
+</section><section id="a-trivial-spa-script" class="slide level2">
+<h1>A Trivial SPA (script)</h1>
+<pre><code>(function() {
+  document.forms[0].onsubmit = function (event) {
+    var text = event.target.elements[0].value.trim();
+    if (text) {
+      var template = document.querySelector(&#39;template&#39;).innerHTML;
+      var message = template.replace(/{name}/, text);
+      var responsePage = document.querySelector(&#39;#response&#39;);
+      responsePage.innerHTML = message;
+      responsePage.style.display = &#39;block&#39;;
+      event.target.style.display = &#39;none&#39;;
+    }
+    event.preventDefault();
+  }  
+})()</code></pre>
+</section></section>
+<section><section id="key-concepts" class="titleslide slide level1"><h1>Key Concepts</h1></section><section id="key-concepts-1" class="slide level2">
+<h1>Key Concepts</h1>
+<ol type="1">
+<li class="fragment">Multiple screens in one page</li>
+<li class="fragment">Content templates</li>
+<li class="fragment">Model-View-Controller</li>
+<li class="fragment">Routing and History</li>
+</ol>
+</section><section id="multiple-screens-in-a-page" class="slide level2">
+<h1>Multiple Screens in a Page</h1>
+<pre><code>&lt;!-- Screen 1 --&gt;
+&lt;form id=request&gt;
+Hi there. What is your name? &lt;input type=text&gt;
+&lt;/form&gt;
+
+&lt;!-- Screen 2 --&gt;
+&lt;div id=response style=&quot;display:none&quot; /&gt;</code></pre>
+</section><section id="multiple-screens-in-a-page-1" class="slide level2">
+<h1>Multiple Screens in a Page</h1>
+<ul>
+<li class="fragment">Block-level elements</li>
+<li class="fragment">Control visibility via CSS
+<ul>
+<li class="fragment">(Often by adding or removing a class)</li>
+<li class="fragment"><code>screen.classList.add('current')</code></li>
+<li class="fragment"><code>screen.classList.remove('current')</code></li>
+</ul></li>
+</ul>
+</section><section id="content-templates" class="slide level2">
+<h1>Content Templates</h1>
+<ul>
+<li>Two kinds:
+<ol type="1">
+<li>Named placeholders:</li>
+</ol></li>
+</ul>
+<pre><code>`Hello, my name is {name}` (dust.js)
+`Hello, my name is {{name}}` (mustache.js, handlebars.js)</code></pre>
+<ol start="2" type="1">
+<li class="fragment">JSP/ERB style:</li>
+</ol>
+<p><code>Hello, my name is &lt;%- name %&gt;</code> -- <a href="http://documentcloud.github.io/underscore/#template">underscore.js</a></p>
+</section><section id="how-templates-work" class="slide level2">
+<h1>How templates work</h1>
+<ol type="1">
+<li class="fragment">Define template in a hidden HTML element (e.g. &lt;script&gt; or &lt;template&gt;)</li>
+<li class="fragment">Load with template library → compiled function</li>
+<li class="fragment">Call function with a JS object</li>
+</ol>
+</section><section id="revised-spa-html" class="slide level2">
+<h1>Revised SPA (HTML)</h1>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;meta charset=utf-8&gt;
+&lt;title&gt;A Trivial Single-Page App&lt;/title&gt;
+&lt;style&gt;
+  .current  { display: block }
+  form, div { display: none }
+&lt;/style&gt;
+
+&lt;form id=request class=&quot;current&quot;&gt;
+Hi there. What is your name? &lt;input type=text autofocus&gt;
+&lt;/form&gt;
+&lt;div id=response /&gt;
+&lt;script src=&quot;lib/underscore.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;/* Next slide */&lt;/script&gt;
+</code></pre>
+</section><section id="revised-spa-script" class="slide level2">
+<h1>Revised SPA (script)</h1>
+<pre><code>window.onload = function() {
+  var compiled = _.template(&quot;Welcome, &lt;%- name %&gt;!&quot;);
+  var responsePage = document.querySelector(&#39;#response&#39;);
+
+  document.forms[0].onsubmit = function (event) {
+    var text = event.target.elements[0].value.trim();
+    if (text) {
+      responsePage.innerHTML = compiled({name:(text)});
+      responsePage.classList.add(&#39;current&#39;);
+      event.target.classList.remove(&#39;current&#39;);
+    }
+    event.preventDefault();
+  }
+}</code></pre>
+</section><section id="thank-you" class="slide level2">
+<h1>Thank you!</h1>
+<p><script type="text/javascript">
+<!--
+h='&#x6b;&#x61;&#x61;&#122;&#x69;&#110;&#x67;&#46;&#x63;&#x6f;&#x6d;';a='&#64;';n='&#114;&#x69;&#x63;&#104;&#x61;&#114;&#100;&#46;&#x63;&#108;&#x61;&#114;&#x6b;';e=n+a+h;
+document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+e+'<\/'+'a'+'>');
+// -->
+</script><noscript>&#114;&#x69;&#x63;&#104;&#x61;&#114;&#100;&#46;&#x63;&#108;&#x61;&#114;&#x6b;&#32;&#x61;&#116;&#32;&#x6b;&#x61;&#x61;&#122;&#x69;&#110;&#x67;&#32;&#100;&#x6f;&#116;&#32;&#x63;&#x6f;&#x6d;</noscript> Github/Twitter: <span class="citation" data-cites="rdclark">@rdclark</span></p>
+</section></section>
+    </div>
+  </div>
+
+
+  <script src="../reveal.js/lib/js/head.min.js"></script>
+  <script src="../reveal.js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'serif', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: '../reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: '../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: '../reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: '../reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+    </body>
+</html>

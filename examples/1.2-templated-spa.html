@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>A Trivial Single-Page App</title>
+<style>
+  .current { display: block }
+  form, div { display: none }
+</style>
+
+<form id=request class="current">
+Hi there. What is your name? <input type=text autofocus>
+</form>
+<div id=response />
+
+<script src="lib/underscore.js"></script>
+<script>
+window.onload = function() {
+  var compiled = _.template("Welcome, <%- name %>!");
+  document.forms[0].onsubmit = function (event) {
+  	var text = event.target.elements[0].value.trim();
+  	if (text) {
+  	  var responsePage = document.querySelector('#response');
+  	  responsePage.innerHTML = compiled({name:(text)});
+  	  responsePage.classList.add('current');
+  	  event.target.classList.remove('current');
+  	}
+  	event.preventDefault();
+  }
+}
+</script>
