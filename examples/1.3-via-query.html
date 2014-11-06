@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Query-driven SPA</title>
+<style>
+  .current { display: block }
+  form, div { display: none }
+</style>
+
+<form id=request class="current" method=put>
+Hi there. What is your name? <input type=text name="name" autofocus>
+</form>
+<div id=response />
+
+<script src="lib/underscore.js"></script>
+<script>
+window.onload = function() {
+  if (!window.location.search || window.location.search.indexOf('?name=') == -1) return;
+  var text = window.location.search.substr(6).trim();
+  if (!text) return;
+  var responsePage = document.querySelector('#response');
+  responsePage.innerHTML = _.template("Welcome, <%- name %>!", {name:(text)});
+  responsePage.classList.add('current');
+  document.forms[0].classList.remove('current');
+}
+</script>

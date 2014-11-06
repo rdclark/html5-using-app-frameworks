@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Star Polygons</title>
+<canvas width=300 height=300></canvas>
+
+<div>
+<label for="sides">Sides:<input id=sides type=range min=3 max=19 step=2 value=11></label>
+<label for="skip" >Skip: <input id=skip type=range min=1 max=5 value=3></label>
+</div>
+
+<script>
+  var canvas = document.querySelector('canvas');
+  var ctx = canvas.getContext('2d');
+  var sidesCtl = document.querySelector('#sides');
+  var skipCtl = document.querySelector('#skip');
+
+  function makeShape(values, radius) {
+      values = values || {};
+      sides = values.sides || 7;
+      skip = values.skip || Math.floor(sides / 2);
+      radius = radius || 150;
+      var sideAngle = 360 / sides;
+
+  	  function makePoint(r, theta) {
+  	  	return {x : (r * Math.cos(theta)),
+  	  		y: (r * Math.sin(theta))};
+  	  }
+
+  	  function radians(degrees) {
+  	  	return (Math.PI * degrees) / 180.0;
+  	  }
+
+  	  function startPath(r, theta) {
+  	  	var pt = makePoint(r, radians(theta));
+  	  	ctx.moveTo(pt.x, pt.y);
+  	  }
+
+  	  function addPoint(r, theta) {
+  	  	var pt = makePoint(r, radians(theta));
+  	  	ctx.lineTo(pt.x, pt.y);
+  	  }
+
+  	  ctx.beginPath();
+  	  startPath(radius, 0);
+      for (var i = 0, angle = 0; i < sides; i++, angle += sideAngle * skip) {
+        addPoint(radius, angle);
+      }
+  	  ctx.closePath();
+
+  }
+
+  function draw(values) {
+    ctx.save();
+    ctx.fillStyle = 'red';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillText("{" + values.sides + (values.skip > 1 ?(", " + values.skip): "") + "}", 0, 10);
+    ctx.strokeStyle = 'black';
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    makeShape(values);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function getValueObject() {
+    var sides = parseInt(sidesCtl.value);
+    var skip = parseInt(skipCtl.value);
+    return {sides:(sides), skip:(skip)};
+  }
+
+  document.onchange = function(evt) {
+    var values = getValueObject(); // ex: {sides:3, skip:1}
+    window.history.pushState(values);
+    draw(values);
+  }
+
+  window.onpopstate = function (event) {
+    draw(event.state);
+  }
+
+  // First time
+  window.onload = function() {
+    var values = getValueObject();
+    window.history.replaceState(values);
+    draw(values);
+  }
+</script>

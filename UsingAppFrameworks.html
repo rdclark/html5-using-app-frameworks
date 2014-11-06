@@ -10,6 +10,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="../reveal.js/css/reveal.min.css"/>
     <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+    </style>
     <link rel="stylesheet" href="../reveal.js/css/theme/simple.css" id="theme">
     <!-- If the query includes 'print-pdf', include the PDF print sheet -->
     <script>
@@ -45,31 +64,31 @@
 <p><a href="./examples/1.1-trivial-spa.html">Demo here</a></p>
 </section><section id="a-trivial-spa-html" class="slide level2">
 <h1>A trivial SPA (HTML)</h1>
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;meta charset=utf-8&gt;
-&lt;title&gt;A Trivial Single-Page App&lt;/title&gt;
-&lt;form id=request&gt;
-Hi there. What is your name? &lt;input type=text autofocus&gt;
-&lt;/form&gt;
-&lt;div id=response style=&quot;display:none&quot; /&gt;
-&lt;template style=&quot;display:none&quot;&gt;Welcome, {name}!&lt;/template&gt;
-&lt;script&gt;
-// See next slide
-&lt;/script&gt;</code></pre>
+<pre class="sourceCode html"><code class="sourceCode html"><span class="dt">&lt;!DOCTYPE </span>html<span class="dt">&gt;</span>
+<span class="kw">&lt;meta</span><span class="ot"> charset=</span><span class="st">utf-8</span><span class="kw">&gt;</span>
+<span class="kw">&lt;title&gt;</span>A Trivial Single-Page App<span class="kw">&lt;/title&gt;</span>
+<span class="kw">&lt;form</span><span class="ot"> id=</span><span class="st">request</span><span class="kw">&gt;</span>
+Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> type=</span><span class="st">text</span><span class="ot"> autofocus</span><span class="kw">&gt;</span>
+<span class="kw">&lt;/form&gt;</span>
+<span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">response</span><span class="ot"> style=</span><span class="st">&quot;display:none&quot;</span> <span class="kw">/&gt;</span>
+<span class="kw">&lt;template</span><span class="ot"> style=</span><span class="st">&quot;display:none&quot;</span><span class="kw">&gt;</span>Welcome, {name}!<span class="kw">&lt;/template&gt;</span>
+<span class="kw">&lt;script&gt;</span>
+<span class="co">// See next slide</span>
+<span class="kw">&lt;/script&gt;</span></code></pre>
 </section><section id="a-trivial-spa-script" class="slide level2">
 <h1>A Trivial SPA (script)</h1>
-<pre><code>(function() {
-  document.forms[0].onsubmit = function (event) {
-    var text = event.target.elements[0].value.trim();
-    if (text) {
-      var template = document.querySelector(&#39;template&#39;).innerHTML;
-      var message = template.replace(/{name}/, text);
-      var responsePage = document.querySelector(&#39;#response&#39;);
-      responsePage.innerHTML = message;
-      responsePage.style.display = &#39;block&#39;;
-      event.target.style.display = &#39;none&#39;;
+<pre class="sourceCode javascript"><code class="sourceCode javascript">(<span class="kw">function</span>() {
+  <span class="ot">document</span>.<span class="fu">forms</span>[<span class="dv">0</span>].<span class="fu">onsubmit</span> = <span class="kw">function</span> (event) {
+    <span class="kw">var</span> text = <span class="ot">event</span>.<span class="ot">target</span>.<span class="fu">elements</span>[<span class="dv">0</span>].<span class="ot">value</span>.<span class="fu">trim</span>();
+    <span class="kw">if</span> (text) {
+      <span class="kw">var</span> template = <span class="ot">document</span>.<span class="fu">querySelector</span>(<span class="st">&#39;template&#39;</span>).<span class="fu">innerHTML</span>;
+      <span class="kw">var</span> message = <span class="ot">template</span>.<span class="fu">replace</span>(<span class="ot">/{name}/</span>, text);
+      <span class="kw">var</span> responsePage = <span class="ot">document</span>.<span class="fu">querySelector</span>(<span class="st">&#39;#response&#39;</span>);
+      <span class="ot">responsePage</span>.<span class="fu">innerHTML</span> = message;
+      <span class="ot">responsePage</span>.<span class="ot">style</span>.<span class="fu">display</span> = <span class="st">&#39;block&#39;</span>;
+      <span class="ot">event</span>.<span class="ot">target</span>.<span class="ot">style</span>.<span class="fu">display</span> = <span class="st">&#39;none&#39;</span>;
     }
-    event.preventDefault();
+    <span class="ot">event</span>.<span class="fu">preventDefault</span>();
   }  
 })()</code></pre>
 </section></section>
@@ -78,18 +97,17 @@ Hi there. What is your name? &lt;input type=text autofocus&gt;
 <ol type="1">
 <li class="fragment">Multiple screens in one page</li>
 <li class="fragment">Content templates</li>
-<li class="fragment">Model-View-Controller</li>
 <li class="fragment">Routing and History</li>
 </ol>
 </section><section id="multiple-screens-in-a-page" class="slide level2">
 <h1>Multiple Screens in a Page</h1>
-<pre><code>&lt;!-- Screen 1 --&gt;
-&lt;form id=request&gt;
-Hi there. What is your name? &lt;input type=text&gt;
-&lt;/form&gt;
+<pre class="sourceCode html"><code class="sourceCode html"><span class="co">&lt;!-- Screen 1 --&gt;</span>
+<span class="kw">&lt;form</span><span class="ot"> id=</span><span class="st">request</span><span class="kw">&gt;</span>
+Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> type=</span><span class="st">text</span><span class="kw">&gt;</span>
+<span class="kw">&lt;/form&gt;</span>
 
-&lt;!-- Screen 2 --&gt;
-&lt;div id=response style=&quot;display:none&quot; /&gt;</code></pre>
+<span class="co">&lt;!-- Screen 2 --&gt;</span>
+<span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">response</span><span class="ot"> style=</span><span class="st">&quot;display:none&quot;</span> <span class="kw">/&gt;</span></code></pre>
 </section><section id="multiple-screens-in-a-page-1" class="slide level2">
 <h1>Multiple Screens in a Page</h1>
 <ul>
@@ -101,7 +119,8 @@ Hi there. What is your name? &lt;input type=text&gt;
 <li class="fragment"><code>screen.classList.remove('current')</code></li>
 </ul></li>
 </ul>
-</section><section id="content-templates" class="slide level2">
+</section></section>
+<section><section id="templating" class="titleslide slide level1"><h1>Templating</h1></section><section id="content-templates" class="slide level2">
 <h1>Content Templates</h1>
 <ul>
 <li>Two kinds:
@@ -122,39 +141,215 @@ Hi there. What is your name? &lt;input type=text&gt;
 <li class="fragment">Load with template library → compiled function</li>
 <li class="fragment">Call function with a JS object</li>
 </ol>
-</section><section id="revised-spa-html" class="slide level2">
-<h1>Revised SPA (HTML)</h1>
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;meta charset=utf-8&gt;
-&lt;title&gt;A Trivial Single-Page App&lt;/title&gt;
-&lt;style&gt;
-  .current  { display: block }
-  form, div { display: none }
-&lt;/style&gt;
+</section><section id="templated-spa-html" class="slide level2">
+<h1>Templated SPA (HTML)</h1>
+<pre class="sourceCode html"><code class="sourceCode html"><span class="dt">&lt;!DOCTYPE </span>html<span class="dt">&gt;</span>
+<span class="kw">&lt;meta</span><span class="ot"> charset=</span><span class="st">utf-8</span><span class="kw">&gt;</span>
+<span class="kw">&lt;title&gt;</span>A Trivial Single-Page App<span class="kw">&lt;/title&gt;</span>
+<span class="kw">&lt;style&gt;</span>
+  <span class="fl">.current</span>  <span class="kw">{</span> <span class="kw">display:</span> <span class="dt">block</span> <span class="kw">}</span>
+  form, div <span class="kw">{</span> <span class="kw">display:</span> <span class="dt">none</span> <span class="kw">}</span>
+<span class="kw">&lt;/style&gt;</span>
 
-&lt;form id=request class=&quot;current&quot;&gt;
-Hi there. What is your name? &lt;input type=text autofocus&gt;
-&lt;/form&gt;
-&lt;div id=response /&gt;
-&lt;script src=&quot;lib/underscore.js&quot;&gt;&lt;/script&gt;
-&lt;script&gt;/* Next slide */&lt;/script&gt;
-</code></pre>
-</section><section id="revised-spa-script" class="slide level2">
-<h1>Revised SPA (script)</h1>
-<pre><code>window.onload = function() {
-  var compiled = _.template(&quot;Welcome, &lt;%- name %&gt;!&quot;);
-  var responsePage = document.querySelector(&#39;#response&#39;);
+<span class="kw">&lt;form</span><span class="ot"> id=</span><span class="st">request</span><span class="ot"> class=</span><span class="st">&quot;current&quot;</span><span class="kw">&gt;</span>
+Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> type=</span><span class="st">text</span><span class="ot"> autofocus</span><span class="kw">&gt;</span>
+<span class="kw">&lt;/form&gt;</span>
+<span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">response</span> <span class="kw">/&gt;</span>
+<span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;lib/underscore.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;script&gt;</span><span class="co">/* Next slide */</span><span class="kw">&lt;/script&gt;</span></code></pre>
+</section><section id="templated-spa-script" class="slide level2">
+<h1>Templated SPA (script)</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">window</span>.<span class="fu">onload</span> = <span class="kw">function</span>() {
+  <span class="kw">var</span> compiled = <span class="ot">_</span>.<span class="fu">template</span>(<span class="st">&quot;Welcome, &lt;%- name %&gt;!&quot;</span>);
+  <span class="kw">var</span> responsePage = <span class="ot">document</span>.<span class="fu">querySelector</span>(<span class="st">&#39;#response&#39;</span>);
 
-  document.forms[0].onsubmit = function (event) {
-    var text = event.target.elements[0].value.trim();
-    if (text) {
-      responsePage.innerHTML = compiled({name:(text)});
-      responsePage.classList.add(&#39;current&#39;);
-      event.target.classList.remove(&#39;current&#39;);
+  <span class="ot">document</span>.<span class="fu">forms</span>[<span class="dv">0</span>].<span class="fu">onsubmit</span> = <span class="kw">function</span> (event) {
+    <span class="kw">var</span> text = <span class="ot">event</span>.<span class="ot">target</span>.<span class="fu">elements</span>[<span class="dv">0</span>].<span class="ot">value</span>.<span class="fu">trim</span>();
+    <span class="kw">if</span> (text) {
+      <span class="ot">responsePage</span>.<span class="fu">innerHTML</span> = <span class="fu">compiled</span>({<span class="dt">name</span>:(text)});
+      <span class="ot">responsePage</span>.<span class="ot">classList</span>.<span class="fu">add</span>(<span class="st">&#39;current&#39;</span>);
+      <span class="ot">event</span>.<span class="ot">target</span>.<span class="ot">classList</span>.<span class="fu">remove</span>(<span class="st">&#39;current&#39;</span>);
     }
-    event.preventDefault();
+    <span class="ot">event</span>.<span class="fu">preventDefault</span>();
   }
 }</code></pre>
+</section><section id="practice" class="slide level2">
+<h1>Practice</h1>
+<ol type="1">
+<li class="fragment">Create a simple &quot;hello world&quot; app using an underscore template.</li>
+<li class="fragment">Merge some data into the template and add to the page.</li>
+<li class="fragment">(Extra) Create an array and render all the elements.</li>
+<li class="fragment">(Extra) Render nested objects.</li>
+</ol>
+</section></section>
+<section><section id="routing-and-history" class="titleslide slide level1"><h1>Routing and History</h1></section><section id="the-problem-with-urls-in-spas" class="slide level2">
+<h1>The problem with URLs in SPAs</h1>
+<ul>
+<li class="fragment">Unique URLs typically map to unique content
+<ul>
+<li class="fragment">Different pages</li>
+<li class="fragment">Fragments within a page: <code>page#named-link</code></li>
+<li class="fragment">RESTful APIs: <code>/shop/shoes/mens/dress/</code> ...</li>
+</ul></li>
+<li class="fragment">People want to bookmark</li>
+<li class="fragment">Search engines want to link</li>
+</ul>
+</section><section id="urls-and-spas" class="slide level2">
+<h1>URLs and SPAs</h1>
+<ul>
+<li class="fragment">Make URLs map to states in the app (<em>Routing</em>)
+<ul>
+<li class="fragment"><code>page?state=1</code> vs. <code>page#state1</code></li>
+</ul></li>
+<li class="fragment">When state changes, update the URL</li>
+<li class="fragment">Track URL changes to set state</li>
+</ul>
+</section><section id="vs" class="slide level2">
+<h1># vs #!</h1>
+<ul>
+<li class="fragment">Content after <code>#</code> is the <em>fragment identifier</em></li>
+<li class="fragment"><a href="http://googlewebmastercentral.blogspot.com/2009/10/proposal-for-making-ajax-crawlable.html">Google proposed</a> <code>#!</code> to designate bookmarkable URLs</li>
+</ul>
+</section><section id="updating-the-url" class="slide level2">
+<h1>Updating the URL</h1>
+<ul>
+<li class="fragment"><code>window.location</code> or <code>window.location.hash</code> (preferred)</li>
+<li class="fragment"><code>window.pushState(data, description, url)</code> (HTML5)</li>
+<li class="fragment"><code>window.replaceState(data, description, url)</code> (HTML5)</li>
+</ul>
+</section><section id="capturing-url-changes" class="slide level2">
+<h1>Capturing URL changes</h1>
+<ul>
+<li class="fragment">hashchange
+<ul>
+<li class="fragment"><code>window.onhashchange = function() { // use window.location.hash...</code></li>
+<li class="fragment">Works on old browsers, even IE</li>
+<li class="fragment">Useful library: <a href="http://benalman.com/projects/jquery-bbq-plugin/">jQuery BBQ</a></li>
+</ul></li>
+</ul>
+</section><section id="the-history-api" class="slide level2">
+<h1>The History API</h1>
+<ul>
+<li class="fragment">Added in HTML5</li>
+<li class="fragment">Adds state objects &amp; descriptions to browser history</li>
+</ul>
+</section><section id="the-history-api-1" class="slide level2">
+<h1>The History API</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">interface</span> History {
+  readonly attribute long length;
+  readonly attribute any state;
+  <span class="kw">void</span> <span class="fu">go</span>(optional long delta);
+  <span class="kw">void</span> <span class="fu">back</span>();
+  <span class="kw">void</span> <span class="fu">forward</span>();
+  <span class="kw">void</span> <span class="fu">pushState</span>(any data, DOMString title, optional DOMString? url = <span class="kw">null</span>);
+  <span class="kw">void</span> <span class="fu">replaceState</span>(any data, DOMString title, optional DOMString? url = <span class="kw">null</span>);
+};</code></pre>
+</section><section id="tracking-history-changes" class="slide level2">
+<h1>Tracking history changes</h1>
+<ul>
+<li class="fragment">popstate
+<ul>
+<li class="fragment">Event fired for history forward/back (if using pushState/replacreState)</li>
+<li class="fragment"><code>event.state</code> = passed-in state object</li>
+</ul></li>
+</ul>
+</section><section id="history-api-gotchas" class="slide level2">
+<h1>History API gotchas</h1>
+<ul>
+<li class="fragment">Some browsers fire popstate on page load, others don't</li>
+<li class="fragment">Most browsers ignore title string</li>
+<li class="fragment">Can only set url for http/https pages</li>
+</ul>
+</section><section id="history-api-example" class="slide level2">
+<h1>History API example</h1>
+<ul>
+<li class="fragment"><a href="./examples/1.4.canvas-star-polygon.html">Star Polygons</a></li>
+</ul>
+</section><section id="history-api-example-1" class="slide level2">
+<h1>History API example</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="fu">getValueObject</span>() {
+  <span class="kw">var</span> sides = <span class="fu">parseInt</span>(<span class="ot">sidesCtl</span>.<span class="fu">value</span>);
+  <span class="kw">var</span> skip = <span class="fu">parseInt</span>(<span class="ot">skipCtl</span>.<span class="fu">value</span>);
+  <span class="kw">return</span> {<span class="dt">sides</span>:(sides), <span class="dt">skip</span>:(skip)};
+}
+
+<span class="ot">document</span>.<span class="fu">onchange</span> = <span class="kw">function</span>(evt) {
+  <span class="kw">var</span> values = <span class="fu">getValueObject</span>(); <span class="co">// ex: {sides:3, skip:1}</span>
+  <span class="ot">window</span>.<span class="ot">history</span>.<span class="fu">pushState</span>(values);
+  <span class="fu">draw</span>(values);
+}
+
+<span class="ot">window</span>.<span class="fu">onpopstate</span> = <span class="kw">function</span> (event) {
+  <span class="fu">draw</span>(<span class="ot">event</span>.<span class="fu">state</span>);
+}
+
+<span class="co">// First time</span>
+<span class="ot">window</span>.<span class="fu">onload</span> = <span class="kw">function</span>() {
+  <span class="kw">var</span> values = <span class="fu">getValueObject</span>();
+  <span class="ot">window</span>.<span class="ot">history</span>.<span class="fu">replaceState</span>(values);
+  <span class="fu">draw</span>(values);
+}</code></pre>
+</section></section>
+<section><section id="spas-via-backbone.js" class="titleslide slide level1"><h1>SPAs via backbone.js</h1></section><section id="backbone.js" class="slide level2">
+<h1>backbone.js</h1>
+<ul>
+<li class="fragment">Basic framework for building SPAs
+<ul>
+<li class="fragment">View rendering</li>
+<li class="fragment">Routing</li>
+<li class="fragment">Events</li>
+<li class="fragment">History management</li>
+<li class="fragment">Networking (via REST &amp; JSON)</li>
+<li class="fragment">Model-View-Controller structure</li>
+</ul></li>
+<li class="fragment">Nice <a href="https://github.com/jashkenas/backbone/wiki/Extensions%2C-Plugins%2C-Resources">collection of plugins and tools</a></li>
+<li class="fragment">Good entry point for more complex frameworks (e.g. AngularJS)</li>
+</ul>
+</section><section id="our-first-example-in-backbone-html" class="slide level2">
+<h1>Our first example, in Backbone (HTML)</h1>
+<pre class="sourceCode html"><code class="sourceCode html"><span class="dt">&lt;!DOCTYPE </span>html<span class="dt">&gt;</span>
+<span class="kw">&lt;meta</span><span class="ot"> charset=</span><span class="st">utf-8</span><span class="kw">&gt;</span>
+<span class="kw">&lt;title&gt;</span>A Trivial Single-Page App<span class="kw">&lt;/title&gt;</span>
+
+<span class="kw">&lt;main</span><span class="ot"> id=</span><span class="st">&quot;helloapp&quot;</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;form</span><span class="ot"> id=</span><span class="st">request</span><span class="kw">&gt;</span>
+  Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> id=</span><span class="st">&quot;name&quot;</span><span class="ot"> type=</span><span class="st">text</span><span class="ot"> autofocus</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;/form&gt;</span>
+  <span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">response</span> <span class="kw">/&gt;</span>
+<span class="kw">&lt;/main&gt;</span>
+
+<span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;lib/underscore.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;lib/zepto.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;lib/backbone.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;script&gt;</span><span class="co">/* Next slide */</span><span class="kw">&lt;/script&gt;</span></code></pre>
+</section><section id="our-first-example-in-backbone-js" class="slide level2">
+<h1>Our first example, in Backbone (JS)</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="fu">$</span>(<span class="kw">function</span>() {
+
+  <span class="kw">var</span> AppView = <span class="ot">Backbone</span>.<span class="ot">View</span>.<span class="fu">extend</span>({
+
+    <span class="dt">el</span>: <span class="fu">$</span>(<span class="st">&#39;#helloapp&#39;</span>),
+
+    <span class="dt">events</span>: {
+      <span class="st">&quot;submit&quot;</span>: <span class="st">&quot;sayHello&quot;</span>
+    },
+
+    <span class="dt">initialize</span>: <span class="kw">function</span>() {
+      <span class="kw">this</span>.<span class="fu">form</span> = <span class="fu">$</span>(<span class="st">&#39;#request&#39;</span>);
+      <span class="kw">this</span>.<span class="fu">input</span> = <span class="fu">$</span>(<span class="st">&#39;#name&#39;</span>);
+    },
+
+    <span class="dt">sayHello</span>: <span class="kw">function</span>(event) {
+      <span class="fu">$</span>(<span class="st">&#39;#response&#39;</span>).<span class="fu">html</span>(<span class="st">&quot;Hello, &quot;</span> + <span class="kw">this</span>.<span class="ot">input</span>.<span class="fu">val</span>());
+      <span class="kw">this</span>.<span class="ot">form</span>.<span class="fu">hide</span>();
+      <span class="ot">event</span>.<span class="fu">preventDefault</span>();
+    },
+  });
+
+  <span class="co">// Starts the app</span>
+  <span class="kw">new</span> AppView;
+
+})</code></pre>
 </section><section id="thank-you" class="slide level2">
 <h1>Thank you!</h1>
 <p><script type="text/javascript">

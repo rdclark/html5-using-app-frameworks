@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>A Trivial Single-Page App</title>
+
+<main id="helloapp">
+  <form id=request>
+  Hi there. What is your name? <input id="name" type=text autofocus>
+  </form>
+  <div id=response />
+</main>
+
+<script src="lib/underscore.js"></script>
+<script src="lib/zepto.js"></script>
+<script src="lib/backbone.js"></script>
+<script>
+$(function() {
+
+  var AppView = Backbone.View.extend({
+
+    el: $('#helloapp'),
+
+    events: {
+      "submit": "sayHello"
+    },
+
+    initialize: function() {
+      this.form = $('#request');
+      this.input = $('#name');
+    },
+
+    sayHello: function(event) {
+      $('#response').html("Hello, " + this.input.val());
+      this.form.hide();
+      event.preventDefault();
+    },
+  });
+
+  // Starts the app
+  new AppView;
+
+})
+
+</script>
