@@ -92,8 +92,8 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
   }  
 })()</code></pre>
 </section></section>
-<section><section id="key-concepts" class="titleslide slide level1"><h1>Key Concepts</h1></section><section id="key-concepts-1" class="slide level2">
-<h1>Key Concepts</h1>
+<section><section id="key-concepts" class="titleslide slide level1"><h1>Key Concepts</h1></section><section id="three-things" class="slide level2">
+<h1>Three things</h1>
 <ol type="1">
 <li class="fragment">Multiple screens in one page</li>
 <li class="fragment">Content templates</li>
@@ -120,20 +120,24 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 </ul></li>
 </ul>
 </section></section>
-<section><section id="templating" class="titleslide slide level1"><h1>Templating</h1></section><section id="content-templates" class="slide level2">
-<h1>Content Templates</h1>
+<section><section id="templating" class="titleslide slide level1"><h1>Templating</h1></section><section id="logic-less-style" class="slide level2">
+<h1>&quot;Logic-less&quot; style</h1>
 <ul>
-<li>Two kinds:
-<ol type="1">
-<li>Named placeholders:</li>
-</ol></li>
+<li>Uses named placeholders
+<ul>
+<li><a href="http://akdubya.github.io/dustjs/">dust.js</a>: <code>Hello, my name is {name}</code></li>
+<li><a href="https://github.com/janl/mustache.js">Mustache JS</a>: <code>Hello, my name is {{name.first}}</code></li>
+</ul></li>
+<li>Special constructs for lists: <code>{#names} Name: {first} Last:{last}   {/names}</code></li>
 </ul>
-<pre><code>`Hello, my name is {name}` (dust.js)
-`Hello, my name is {{name}}` (mustache.js, handlebars.js)</code></pre>
-<ol start="2" type="1">
-<li class="fragment">JSP/ERB style:</li>
-</ol>
-<p><code>Hello, my name is &lt;%- name %&gt;</code> -- <a href="http://documentcloud.github.io/underscore/#template">underscore.js</a></p>
+</section><section id="with-embedded-logic" class="slide level2">
+<h1>With embedded logic</h1>
+<ul>
+<li>JSP/ERB style
+<ul>
+<li><a href="http://documentcloud.github.io/underscore/#template">underscore.js</a>: <code>Hello, my name is &lt;%- name %&gt;</code></li>
+</ul></li>
+</ul>
 </section><section id="how-templates-work" class="slide level2">
 <h1>How templates work</h1>
 <ol type="1">
@@ -182,8 +186,8 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 <li class="fragment">(Extra) Render nested objects.</li>
 </ol>
 </section></section>
-<section><section id="routing-and-history" class="titleslide slide level1"><h1>Routing and History</h1></section><section id="the-problem-with-urls-in-spas" class="slide level2">
-<h1>The problem with URLs in SPAs</h1>
+<section><section id="routing-and-history" class="titleslide slide level1"><h1>Routing and History</h1></section><section id="the-challenge-with-urls" class="slide level2">
+<h1>The challenge with URLs</h1>
 <ul>
 <li class="fragment">Unique URLs typically map to unique content
 <ul>
@@ -222,10 +226,11 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 <ul>
 <li class="fragment">hashchange
 <ul>
-<li class="fragment"><code>window.onhashchange = function() { // use window.location.hash...</code></li>
+<li class="fragment">`window.onhashchange = function() {</li>
+<li class="fragment"><code>// use window.location.hash...</code></li>
+</ul></li>
 <li class="fragment">Works on old browsers, even IE</li>
 <li class="fragment">Useful library: <a href="http://benalman.com/projects/jquery-bbq-plugin/">jQuery BBQ</a></li>
-</ul></li>
 </ul>
 </section><section id="the-history-api" class="slide level2">
 <h1>The History API</h1>

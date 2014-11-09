@@ -44,7 +44,7 @@ Hi there. What is your name? <input type=text autofocus>
 
 # Key Concepts
 
-## Key Concepts
+## Three things
 
 1. Multiple screens in one page
 2. Content templates
@@ -72,17 +72,17 @@ Hi there. What is your name? <input type=text>
 
 # Templating
 
-## Content Templates
+## "Logic-less" style
 
-> + Two kinds:
-    1. Named placeholders:
+> + Uses named placeholders
+    - [dust.js](http://akdubya.github.io/dustjs/): `Hello, my name is {name}`
+    - [Mustache JS](https://github.com/janl/mustache.js): `Hello, my name is {{name.first}}`
++ Special constructs for lists: `{#names} Name: {first} Last:{last}   {/names}`
 
-    `Hello, my name is {name}` (dust.js)
-    `Hello, my name is {{name}}` (mustache.js, handlebars.js)
+## With embedded logic
 
-   2. JSP/ERB style:
-
-   `Hello, my name is <%- name %>` -- [underscore.js](http://documentcloud.github.io/underscore/#template)
+>+ JSP/ERB style
+    - [underscore.js](http://documentcloud.github.io/underscore/#template): `Hello, my name is <%- name %>`
 
 ## How templates work
 
@@ -138,7 +138,7 @@ window.onload = function() {
 
 # Routing and History
 
-## The problem with URLs in SPAs
+## The challenge with URLs
 
 + Unique URLs typically map to unique content
     - Different pages
@@ -169,9 +169,10 @@ window.onload = function() {
 ## Capturing URL changes
 
 + hashchange
-    - `window.onhashchange = function() { // use window.location.hash...`
-    - Works on old browsers, even IE
-    - Useful library: [jQuery BBQ](http://benalman.com/projects/jquery-bbq-plugin/)
+    - `window.onhashchange = function() {
+    - `// use window.location.hash...`
+- Works on old browsers, even IE
+- Useful library: [jQuery BBQ](http://benalman.com/projects/jquery-bbq-plugin/)
 
 ## The History API
 
