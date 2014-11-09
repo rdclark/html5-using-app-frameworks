@@ -349,7 +349,314 @@ $(function() {
 })
 ```
 
-## Thank you!
+## MVC in Backbone
+
+> + Model-View-Controller
+    - Model: The information to be displayed
+    - View: How it's displayed (templates)
+    - Controller: The code that links these
+
+## The Model
+
++ Subclass of Backbone.Model
+    - `var Stock = Backbone.Model.extend({ ...})`
+    - "Frequently representing a row of data on your server" per [annotated source](http://backbonejs.org/docs/backbone.html)
+- Emits `change` event on change
+- Paired with a View for rendering
+
+## Example model
+
+```javascript
+var Stock = Backbone.Model.extend({
+  // typical data: {ticker: "AAPL", company: "Apple", price: 123.45}
+  idAttribute: 'ticker',
+
+  lastPrice: null,
+
+  initialize: function () {
+      this.attributes.change = '';
+      this.lastPrice = null;
+      this.on('change', this.onChange, this);
+  },
+
+  onChange: function () {
+      var price = this.attributes.price;
+      if (this.lastPrice) this.attributes.change = price - this.lastPrice;
+      this.lastPrice = price;
+  }
+
+});
+```
+
+## Collections hold multiple models
+
+```javascript
+var StockCollection = Backbone.Collection.extend({
+
+  // Reference to this collection's model.
+  model: Stock,
+
+  // Sort by name
+  comparator: 'company'
+
+});
+```
+
+## Views render Models & Collections
+
++ Subclass of Backbone.View
+    - `var StockView = Backbone.View.extend({ ... })`
+    - Listen for events from model (`change`) or collection (`add`, `remove`, `change`)
+
+## HTML to contain view
+
+``` html
+<div id="stockapp">
+    <header>
+        <h1>Stock Ticker using JMS and Backbone</h1>
+    </header>
+    <table id="stocks">
+        <thead>
+        <tr>
+            <th>Company</th>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>Change</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Stocks will go here -->
+        </tbody>
+    </table>
+</div>
+```
+
+## View template (underscore)
+
+```html
+<script type="text/template" id="stock-template">
+  <td><%- company %></td>
+  <td><%- symbol %></td>
+  <td>$<%= price.toFixed(2) %></td>
+  <td>$<%= change.toFixed(2) %></td>
+</script>
+```
+
+## View code
+
+```javascript
+// The DOM element for a Stock...
+var StockView = Backbone.View.extend({
+  //... is a table row.
+  tagName: 'tr',
+
+  className: 'stock',
+
+  // Cache the template function for a single item.
+  template: _.template($('#stock-template').html()),
+
+  // The StockView listens for changes to its model, re-rendering.
+  initialize: function () {
+      this.listenTo(this.model, 'change', this.render);
+  },
+
+  // Rebuild the table row.
+  render: function () {
+      this.$el.html(this.template(this.model.toJSON()));
+      return this;
+  }
+});
+```
+
+## Rendering the collection
+> - Wrap the table in a template
+```html
+<script type="text/template" id="portfolio-template">
+  <table>
+      <thead>
+      <tr>
+          <th>Company</th>
+          <th>Symbol</th>
+          <th>Price</th>
+          <th>Change</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Stocks will go here -->
+      </tbody>
+  </table>
+</script>
+```
+
+## Rendering the collection
+
+```javascript
+var StockCollectionView = Backbone.View.extend({
+
+  tagName: "table",
+
+  // Cache the template function for a single item.
+  template: _.template($('#portfolio-template').html()),
+
+  subviews: [],
+
+  initialize: function () {
+      this.subviews = [];
+      this.$el.html(this.template());
+      this.collection.on('add', this.added, this);
+  },
+
+  added: function (stock) {
+      var index = this.collection.models.indexOf(stock);
+      var subview = new StockView({model: stock});
+      var html = subview.render().$el;
+      // Patch the DOM directly to avoid removing and rebuilding the whole table
+      if (index == this.subviews.length) {
+          this.$el.find('tbody').append(html);
+      } else {
+          this.subviews[index].$el.before(html);
+      }
+      this.subviews.splice(index, 0, subview);
+  },
+
+  render: function () {
+      return this;
+  }
+});
+```
+
+## The Controller
+
+- Not a separate class
+- Implemented as event listeners in the view (typically the application view)
+
+## App view code
+
+```javascript
+var AppView = Backbone.View.extend({
+  el: $("#stockapp"), // bind to existing in HTML
+
+  initialize: function () {
+      var stockTable = this.$el.find('#stocks');
+      var newTable = PortfolioView.render().el;
+      stockTable.html(newTable);
+
+      Portfolio.on('add remove', this.render, this);
+  },
+
+  render: function () {
+      PortfolioView.render();
+      return this;
+  }
+});
+
+var App = new AppView;
+```
+
+## Extra: Adding real-time data
+
++ Backbone assumes a REST model
+    - User actions trigger a GET/PUT/POST
+    - e.g. adding a TODO item
++ Add a data source:
+    - Listen for incoming messages (Comet, WebSockets)
+    - Emit an event for each
+    - Controller code parses data, merges into model
+
+## Real-time data via Kaazing JMS
+
+```javascript
+// Router for JMS messages
+var JMSHandler = function (url) {
+    this.url = url;
+    this.connection = null;
+    this.session = null;
+}
+
+_.extend(JMSHandler.prototype, Backbone.Events, {
+    connection: null,
+    session: null,
+
+    connect: function () {
+        var factory = new JmsConnectionFactory(this.url);
+        var self = this;
+        var future = factory.createConnection(function () {
+            try {
+                var connection = self.connection = future.getValue();
+                var session = self.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                self.trigger('sessionReady', session);
+                connection.start(function () {
+                  this.trigger('connectionStarted', connection, session);
+                });
+            } catch (e) {
+                alert(e.message);
+            }
+        });
+    }
+});
+
+```
+
+## Processing the data
+
+> + In AppView
+
+```javascript
+  initialize: function () {
+      var stockTable = this.$el.find('#stocks');
+      var newTable = PortfolioView.render().el;
+      stockTable.html(newTable);
+
+      Portfolio.on('add remove', this.render, this);
+      this.jms = new JMSHandler("ws://localhost:8000/jms");
+      this.jms.on('sessionReady', this.onSessionReady, this);
+      this.jms.connect();
+  },
+
+  onSessionReady: function (session) {
+      this.topic = session.createTopic("/topic/stock");
+      this.consumer = session.createConsumer(this.topic);
+      this.consumer.setMessageListener(this.onStockMessage);
+  },
+
+  onStockMessage: function (message) {
+      var text = message.getText();
+      var attrs = Stock.prototype.parse(text);
+      Portfolio.add(attrs, {merge: true});
+  },
+
+```
+
+## Parsing the message
+
+> + In Stock class
+
+```javascript
+  // The usual parse function is handed a JSON response and merely returns it.
+  // We're getting a colon-delimited string.
+  parse: function (text) {
+      var a = text.split(':');
+      return { company: (a[0]), ticker: (a[1]), price: (parseFloat(a[2])) };
+  },
+
+```
+
+## Not discussed
+
+- Saving via `Backbone.sync`
+- Routing via `Backbone.Router`
+- History management via `Backbone.History`
+
+## Practice
+
+> 1. Implement "Hello" SPA using Backbone
+> 2. Create a page with a button. Show the number of clicks
+> 3. [Getnames.org](http://www.geonames.org) implements a search page that returns JSON. Write your own front-end for it.
+    - Hint: The [Neighborhood](https://github.com/rdclark/neighhborhood) sample app implements this search using jQuery's AJAX support. See [js/geo_CORS.js](https://github.com/rdclark/neighhborhood/blob/master/js/geo_CORS.js)
+
+# Thank you!
+
+## Making contact
 
 [richard.clark@kaazing.com](mailto:richard.clark@kaazing.com)
 Github/Twitter: @rdclark

@@ -403,8 +403,302 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
   <span class="kw">new</span> AppView;
 
 })</code></pre>
-</section><section id="thank-you" class="slide level2">
-<h1>Thank you!</h1>
+</section><section id="mvc-in-backbone" class="slide level2">
+<h1>MVC in Backbone</h1>
+<ul>
+<li>Model-View-Controller
+<ul>
+<li>Model: The information to be displayed</li>
+<li>View: How it's displayed (templates)</li>
+<li>Controller: The code that links these</li>
+</ul></li>
+</ul>
+</section><section id="the-model" class="slide level2">
+<h1>The Model</h1>
+<ul>
+<li class="fragment">Subclass of Backbone.Model
+<ul>
+<li class="fragment"><code>var Stock = Backbone.Model.extend({ ...})</code></li>
+<li class="fragment">&quot;Frequently representing a row of data on your server&quot; per <a href="http://backbonejs.org/docs/backbone.html">annotated source</a></li>
+</ul></li>
+<li class="fragment">Emits <code>change</code> event on change</li>
+<li class="fragment">Paired with a View for rendering</li>
+</ul>
+</section><section id="example-model" class="slide level2">
+<h1>Example model</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> Stock = <span class="ot">Backbone</span>.<span class="ot">Model</span>.<span class="fu">extend</span>({
+  <span class="co">// typical data: {ticker: &quot;AAPL&quot;, company: &quot;Apple&quot;, price: 123.45}</span>
+  <span class="dt">idAttribute</span>: <span class="st">&#39;ticker&#39;</span>,
+
+  <span class="dt">lastPrice</span>: <span class="kw">null</span>,
+
+  <span class="dt">initialize</span>: <span class="kw">function</span> () {
+      <span class="kw">this</span>.<span class="ot">attributes</span>.<span class="fu">change</span> = <span class="st">&#39;&#39;</span>;
+      <span class="kw">this</span>.<span class="fu">lastPrice</span> = <span class="kw">null</span>;
+      <span class="kw">this</span>.<span class="fu">on</span>(<span class="st">&#39;change&#39;</span>, <span class="kw">this</span>.<span class="fu">onChange</span>, <span class="kw">this</span>);
+  },
+
+  <span class="dt">onChange</span>: <span class="kw">function</span> () {
+      <span class="kw">var</span> price = <span class="kw">this</span>.<span class="ot">attributes</span>.<span class="fu">price</span>;
+      <span class="kw">if</span> (<span class="kw">this</span>.<span class="fu">lastPrice</span>) <span class="kw">this</span>.<span class="ot">attributes</span>.<span class="fu">change</span> = price - <span class="kw">this</span>.<span class="fu">lastPrice</span>;
+      <span class="kw">this</span>.<span class="fu">lastPrice</span> = price;
+  }
+
+});</code></pre>
+</section><section id="collections-hold-multiple-models" class="slide level2">
+<h1>Collections hold multiple models</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> StockCollection = <span class="ot">Backbone</span>.<span class="ot">Collection</span>.<span class="fu">extend</span>({
+
+  <span class="co">// Reference to this collection&#39;s model.</span>
+  <span class="dt">model</span>: Stock,
+
+  <span class="co">// Sort by name</span>
+  <span class="dt">comparator</span>: <span class="st">&#39;company&#39;</span>
+
+});</code></pre>
+</section><section id="views-render-models-collections" class="slide level2">
+<h1>Views render Models &amp; Collections</h1>
+<ul>
+<li class="fragment">Subclass of Backbone.View
+<ul>
+<li class="fragment"><code>var StockView = Backbone.View.extend({ ... })</code></li>
+<li class="fragment">Listen for events from model (<code>change</code>) or collection (<code>add</code>, <code>remove</code>, <code>change</code>)</li>
+</ul></li>
+</ul>
+</section><section id="html-to-contain-view" class="slide level2">
+<h1>HTML to contain view</h1>
+<pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">&quot;stockapp&quot;</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;header&gt;</span>
+        <span class="kw">&lt;h1&gt;</span>Stock Ticker using JMS and Backbone<span class="kw">&lt;/h1&gt;</span>
+    <span class="kw">&lt;/header&gt;</span>
+    <span class="kw">&lt;table</span><span class="ot"> id=</span><span class="st">&quot;stocks&quot;</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;thead&gt;</span>
+        <span class="kw">&lt;tr&gt;</span>
+            <span class="kw">&lt;th&gt;</span>Company<span class="kw">&lt;/th&gt;</span>
+            <span class="kw">&lt;th&gt;</span>Symbol<span class="kw">&lt;/th&gt;</span>
+            <span class="kw">&lt;th&gt;</span>Price<span class="kw">&lt;/th&gt;</span>
+            <span class="kw">&lt;th&gt;</span>Change<span class="kw">&lt;/th&gt;</span>
+        <span class="kw">&lt;/tr&gt;</span>
+        <span class="kw">&lt;/thead&gt;</span>
+        <span class="kw">&lt;tbody&gt;</span>
+        <span class="co">&lt;!-- Stocks will go here --&gt;</span>
+        <span class="kw">&lt;/tbody&gt;</span>
+    <span class="kw">&lt;/table&gt;</span>
+<span class="kw">&lt;/div&gt;</span></code></pre>
+</section><section id="view-template-underscore" class="slide level2">
+<h1>View template (underscore)</h1>
+<pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/template&quot;</span><span class="ot"> id=</span><span class="st">&quot;stock-template&quot;</span><span class="kw">&gt;</span>
+  &lt;td&gt;&lt;%- company %&gt;&lt;<span class="ot">/td&gt;</span>
+<span class="ot">  &lt;td&gt;&lt;%- symbol %&gt;&lt;/td</span>&gt;
+  &lt;td&gt;$&lt;%= <span class="ot">price</span>.<span class="fu">toFixed</span>(<span class="dv">2</span>) %&gt;&lt;<span class="ot">/td&gt;</span>
+<span class="ot">  &lt;td&gt;$&lt;%= change.toFixed</span><span class="fl">(</span><span class="ot">2</span><span class="fl">)</span><span class="ot"> %&gt;&lt;/td</span>&gt;
+&lt;<span class="ot">/script&gt;</span></code></pre>
+</section><section id="view-code" class="slide level2">
+<h1>View code</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// The DOM element for a Stock...</span>
+<span class="kw">var</span> StockView = <span class="ot">Backbone</span>.<span class="ot">View</span>.<span class="fu">extend</span>({
+  <span class="co">//... is a table row.</span>
+  <span class="dt">tagName</span>: <span class="st">&#39;tr&#39;</span>,
+
+  <span class="dt">className</span>: <span class="st">&#39;stock&#39;</span>,
+
+  <span class="co">// Cache the template function for a single item.</span>
+  <span class="dt">template</span>: <span class="ot">_</span>.<span class="fu">template</span>(<span class="fu">$</span>(<span class="st">&#39;#stock-template&#39;</span>).<span class="fu">html</span>()),
+
+  <span class="co">// The StockView listens for changes to its model, re-rendering.</span>
+  <span class="dt">initialize</span>: <span class="kw">function</span> () {
+      <span class="kw">this</span>.<span class="fu">listenTo</span>(<span class="kw">this</span>.<span class="fu">model</span>, <span class="st">&#39;change&#39;</span>, <span class="kw">this</span>.<span class="fu">render</span>);
+  },
+
+  <span class="co">// Rebuild the table row.</span>
+  <span class="dt">render</span>: <span class="kw">function</span> () {
+      <span class="kw">this</span>.<span class="ot">$el</span>.<span class="fu">html</span>(<span class="kw">this</span>.<span class="fu">template</span>(<span class="kw">this</span>.<span class="ot">model</span>.<span class="fu">toJSON</span>()));
+      <span class="kw">return</span> <span class="kw">this</span>;
+  }
+});</code></pre>
+</section><section id="rendering-the-collection" class="slide level2">
+<h1>Rendering the collection</h1>
+<ul>
+<li>Wrap the table in a template</li>
+</ul>
+<pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/template&quot;</span><span class="ot"> id=</span><span class="st">&quot;portfolio-template&quot;</span><span class="kw">&gt;</span>
+  &lt;table&gt;
+      &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Company&lt;<span class="ot">/th&gt;</span>
+<span class="ot">          &lt;th&gt;Symbol&lt;/th</span>&gt;
+          &lt;th&gt;Price&lt;<span class="ot">/th&gt;</span>
+<span class="ot">          &lt;th&gt;Change&lt;/th</span>&gt;
+      &lt;<span class="ot">/tr&gt;</span>
+<span class="ot">      &lt;/thead</span>&gt;
+      &lt;tbody&gt;
+      &lt;!-- Stocks will go here --&gt;
+      &lt;<span class="ot">/tbody&gt;</span>
+<span class="ot">  &lt;/table</span>&gt;
+&lt;<span class="ot">/script&gt;</span></code></pre>
+</section><section id="rendering-the-collection-1" class="slide level2">
+<h1>Rendering the collection</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> StockCollectionView = <span class="ot">Backbone</span>.<span class="ot">View</span>.<span class="fu">extend</span>({
+
+  <span class="dt">tagName</span>: <span class="st">&quot;table&quot;</span>,
+
+  <span class="co">// Cache the template function for a single item.</span>
+  <span class="dt">template</span>: <span class="ot">_</span>.<span class="fu">template</span>(<span class="fu">$</span>(<span class="st">&#39;#portfolio-template&#39;</span>).<span class="fu">html</span>()),
+
+  <span class="dt">subviews</span>: [],
+
+  <span class="dt">initialize</span>: <span class="kw">function</span> () {
+      <span class="kw">this</span>.<span class="fu">subviews</span> = [];
+      <span class="kw">this</span>.<span class="ot">$el</span>.<span class="fu">html</span>(<span class="kw">this</span>.<span class="fu">template</span>());
+      <span class="kw">this</span>.<span class="ot">collection</span>.<span class="fu">on</span>(<span class="st">&#39;add&#39;</span>, <span class="kw">this</span>.<span class="fu">added</span>, <span class="kw">this</span>);
+  },
+
+  <span class="dt">added</span>: <span class="kw">function</span> (stock) {
+      <span class="kw">var</span> index = <span class="kw">this</span>.<span class="ot">collection</span>.<span class="ot">models</span>.<span class="fu">indexOf</span>(stock);
+      <span class="kw">var</span> subview = <span class="kw">new</span> <span class="fu">StockView</span>({<span class="dt">model</span>: stock});
+      <span class="kw">var</span> html = <span class="ot">subview</span>.<span class="fu">render</span>().<span class="fu">$el</span>;
+      <span class="co">// Patch the DOM directly to avoid removing and rebuilding the whole table</span>
+      <span class="kw">if</span> (index == <span class="kw">this</span>.<span class="ot">subviews</span>.<span class="fu">length</span>) {
+          <span class="kw">this</span>.<span class="ot">$el</span>.<span class="fu">find</span>(<span class="st">&#39;tbody&#39;</span>).<span class="fu">append</span>(html);
+      } <span class="kw">else</span> {
+          <span class="kw">this</span>.<span class="fu">subviews</span>[index].<span class="ot">$el</span>.<span class="fu">before</span>(html);
+      }
+      <span class="kw">this</span>.<span class="ot">subviews</span>.<span class="fu">splice</span>(index, <span class="dv">0</span>, subview);
+  },
+
+  <span class="dt">render</span>: <span class="kw">function</span> () {
+      <span class="kw">return</span> <span class="kw">this</span>;
+  }
+});</code></pre>
+</section><section id="the-controller" class="slide level2">
+<h1>The Controller</h1>
+<ul>
+<li class="fragment">Not a separate class</li>
+<li class="fragment">Implemented as event listeners in the view (typically the application view)</li>
+</ul>
+</section><section id="app-view-code" class="slide level2">
+<h1>App view code</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> AppView = <span class="ot">Backbone</span>.<span class="ot">View</span>.<span class="fu">extend</span>({
+  <span class="dt">el</span>: <span class="fu">$</span>(<span class="st">&quot;#stockapp&quot;</span>), <span class="co">// bind to existing in HTML</span>
+
+  <span class="dt">initialize</span>: <span class="kw">function</span> () {
+      <span class="kw">var</span> stockTable = <span class="kw">this</span>.<span class="ot">$el</span>.<span class="fu">find</span>(<span class="st">&#39;#stocks&#39;</span>);
+      <span class="kw">var</span> newTable = <span class="ot">PortfolioView</span>.<span class="fu">render</span>().<span class="fu">el</span>;
+      <span class="ot">stockTable</span>.<span class="fu">html</span>(newTable);
+
+      <span class="ot">Portfolio</span>.<span class="fu">on</span>(<span class="st">&#39;add remove&#39;</span>, <span class="kw">this</span>.<span class="fu">render</span>, <span class="kw">this</span>);
+  },
+
+  <span class="dt">render</span>: <span class="kw">function</span> () {
+      <span class="ot">PortfolioView</span>.<span class="fu">render</span>();
+      <span class="kw">return</span> <span class="kw">this</span>;
+  }
+});
+
+<span class="kw">var</span> App = <span class="kw">new</span> AppView;</code></pre>
+</section><section id="extra-adding-real-time-data" class="slide level2">
+<h1>Extra: Adding real-time data</h1>
+<ul>
+<li class="fragment">Backbone assumes a REST model
+<ul>
+<li class="fragment">User actions trigger a GET/PUT/POST</li>
+<li class="fragment">e.g. adding a TODO item</li>
+</ul></li>
+<li class="fragment">Add a data source:
+<ul>
+<li class="fragment">Listen for incoming messages (Comet, WebSockets)</li>
+<li class="fragment">Emit an event for each</li>
+<li class="fragment">Controller code parses data, merges into model</li>
+</ul></li>
+</ul>
+</section><section id="real-time-data-via-kaazing-jms" class="slide level2">
+<h1>Real-time data via Kaazing JMS</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="co">// Router for JMS messages</span>
+<span class="kw">var</span> JMSHandler = <span class="kw">function</span> (url) {
+    <span class="kw">this</span>.<span class="fu">url</span> = url;
+    <span class="kw">this</span>.<span class="fu">connection</span> = <span class="kw">null</span>;
+    <span class="kw">this</span>.<span class="fu">session</span> = <span class="kw">null</span>;
+}
+
+<span class="ot">_</span>.<span class="fu">extend</span>(<span class="ot">JMSHandler</span>.<span class="fu">prototype</span>, <span class="ot">Backbone</span>.<span class="fu">Events</span>, {
+    <span class="dt">connection</span>: <span class="kw">null</span>,
+    <span class="dt">session</span>: <span class="kw">null</span>,
+
+    <span class="dt">connect</span>: <span class="kw">function</span> () {
+        <span class="kw">var</span> factory = <span class="kw">new</span> <span class="fu">JmsConnectionFactory</span>(<span class="kw">this</span>.<span class="fu">url</span>);
+        <span class="kw">var</span> self = <span class="kw">this</span>;
+        <span class="kw">var</span> future = <span class="ot">factory</span>.<span class="fu">createConnection</span>(<span class="kw">function</span> () {
+            <span class="kw">try</span> {
+                <span class="kw">var</span> connection = <span class="ot">self</span>.<span class="fu">connection</span> = <span class="ot">future</span>.<span class="fu">getValue</span>();
+                <span class="kw">var</span> session = <span class="ot">self</span>.<span class="fu">session</span> = <span class="ot">connection</span>.<span class="fu">createSession</span>(<span class="kw">false</span>, <span class="ot">Session</span>.<span class="fu">AUTO_ACKNOWLEDGE</span>);
+                <span class="ot">self</span>.<span class="fu">trigger</span>(<span class="st">&#39;sessionReady&#39;</span>, session);
+                <span class="ot">connection</span>.<span class="fu">start</span>(<span class="kw">function</span> () {
+                  <span class="kw">this</span>.<span class="fu">trigger</span>(<span class="st">&#39;connectionStarted&#39;</span>, connection, session);
+                });
+            } <span class="kw">catch</span> (e) {
+                <span class="fu">alert</span>(<span class="ot">e</span>.<span class="fu">message</span>);
+            }
+        });
+    }
+});</code></pre>
+</section><section id="processing-the-data" class="slide level2">
+<h1>Processing the data</h1>
+<ul>
+<li>In AppView</li>
+</ul>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">  initialize: <span class="kw">function</span> () {
+      <span class="kw">var</span> stockTable = <span class="kw">this</span>.<span class="ot">$el</span>.<span class="fu">find</span>(<span class="st">&#39;#stocks&#39;</span>);
+      <span class="kw">var</span> newTable = <span class="ot">PortfolioView</span>.<span class="fu">render</span>().<span class="fu">el</span>;
+      <span class="ot">stockTable</span>.<span class="fu">html</span>(newTable);
+
+      <span class="ot">Portfolio</span>.<span class="fu">on</span>(<span class="st">&#39;add remove&#39;</span>, <span class="kw">this</span>.<span class="fu">render</span>, <span class="kw">this</span>);
+      <span class="kw">this</span>.<span class="fu">jms</span> = <span class="kw">new</span> <span class="fu">JMSHandler</span>(<span class="st">&quot;ws://localhost:8000/jms&quot;</span>);
+      <span class="kw">this</span>.<span class="ot">jms</span>.<span class="fu">on</span>(<span class="st">&#39;sessionReady&#39;</span>, <span class="kw">this</span>.<span class="fu">onSessionReady</span>, <span class="kw">this</span>);
+      <span class="kw">this</span>.<span class="ot">jms</span>.<span class="fu">connect</span>();
+  },
+
+  onSessionReady: <span class="kw">function</span> (session) {
+      <span class="kw">this</span>.<span class="fu">topic</span> = <span class="ot">session</span>.<span class="fu">createTopic</span>(<span class="st">&quot;/topic/stock&quot;</span>);
+      <span class="kw">this</span>.<span class="fu">consumer</span> = <span class="ot">session</span>.<span class="fu">createConsumer</span>(<span class="kw">this</span>.<span class="fu">topic</span>);
+      <span class="kw">this</span>.<span class="ot">consumer</span>.<span class="fu">setMessageListener</span>(<span class="kw">this</span>.<span class="fu">onStockMessage</span>);
+  },
+
+  onStockMessage: <span class="kw">function</span> (message) {
+      <span class="kw">var</span> text = <span class="ot">message</span>.<span class="fu">getText</span>();
+      <span class="kw">var</span> attrs = <span class="ot">Stock</span>.<span class="ot">prototype</span>.<span class="fu">parse</span>(text);
+      <span class="ot">Portfolio</span>.<span class="fu">add</span>(attrs, {<span class="dt">merge</span>: <span class="kw">true</span>});
+  },</code></pre>
+</section><section id="parsing-the-message" class="slide level2">
+<h1>Parsing the message</h1>
+<ul>
+<li>In Stock class</li>
+</ul>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">  <span class="co">// The usual parse function is handed a JSON response and merely returns it.</span>
+  <span class="co">// We&#39;re getting a colon-delimited string.</span>
+  parse: <span class="kw">function</span> (text) {
+      <span class="kw">var</span> a = <span class="ot">text</span>.<span class="fu">split</span>(<span class="st">&#39;:&#39;</span>);
+      <span class="kw">return</span> { <span class="dt">company</span>: (a[<span class="dv">0</span>]), <span class="dt">ticker</span>: (a[<span class="dv">1</span>]), <span class="dt">price</span>: (<span class="fu">parseFloat</span>(a[<span class="dv">2</span>])) };
+  },</code></pre>
+</section><section id="not-discussed" class="slide level2">
+<h1>Not discussed</h1>
+<ul>
+<li class="fragment">Saving via <code>Backbone.sync</code></li>
+<li class="fragment">Routing via <code>Backbone.Router</code></li>
+<li class="fragment">History management via <code>Backbone.History</code></li>
+</ul>
+</section><section id="practice-5" class="slide level2">
+<h1>Practice</h1>
+<ol type="1">
+<li>Implement &quot;Hello&quot; SPA using Backbone</li>
+<li>Create a page with a button. Show the number of clicks</li>
+<li><a href="http://www.geonames.org">Getnames.org</a> implements a search page that returns JSON. Write your own front-end for it.
+<ul>
+<li>Hint: The <a href="https://github.com/rdclark/neighhborhood">Neighborhood</a> sample app implements this search using jQuery's AJAX support. See <a href="https://github.com/rdclark/neighhborhood/blob/master/js/geo_CORS.js">js/geo_CORS.js</a></li>
+</ul></li>
+</ol>
+</section></section>
+<section><section id="thank-you" class="titleslide slide level1"><h1>Thank you!</h1></section><section id="making-contact" class="slide level2">
+<h1>Making contact</h1>
 <p><script type="text/javascript">
 <!--
 h='&#x6b;&#x61;&#x61;&#122;&#x69;&#110;&#x67;&#46;&#x63;&#x6f;&#x6d;';a='&#64;';n='&#114;&#x69;&#x63;&#104;&#x61;&#114;&#100;&#46;&#x63;&#108;&#x61;&#114;&#x6b;';e=n+a+h;
