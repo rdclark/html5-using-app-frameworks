@@ -119,6 +119,47 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 <li class="fragment"><code>screen.classList.remove('current')</code></li>
 </ul></li>
 </ul>
+</section><section id="practice-1" class="slide level2">
+<h1>Practice (1)</h1>
+<ul>
+<li>Identify the screens in this page. What are your options for showing and hiding?</li>
+</ul>
+<pre class="sourceCode html"><code class="sourceCode html"><span class="dt">&lt;!DOCTYPE </span>html<span class="dt">&gt;</span>
+<span class="kw">&lt;meta</span><span class="ot"> charset=</span><span class="st">utf-8</span><span class="kw">&gt;</span>
+<span class="kw">&lt;title&gt;</span>A Trivial Single-Page App<span class="kw">&lt;/title&gt;</span>
+<span class="kw">&lt;form</span><span class="ot"> id=</span><span class="st">request</span><span class="kw">&gt;</span>
+Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> type=</span><span class="st">text</span><span class="ot"> autofocus</span><span class="kw">&gt;</span>
+<span class="kw">&lt;/form&gt;</span>
+<span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">response</span><span class="ot"> style=</span><span class="st">&quot;display:none&quot;</span> <span class="kw">/&gt;</span>
+<span class="kw">&lt;template</span><span class="ot"> style=</span><span class="st">&quot;display:none&quot;</span><span class="kw">&gt;</span>Welcome, {name}!<span class="kw">&lt;/template&gt;</span>
+<span class="kw">&lt;script&gt;</span>
+<span class="co">// See next slide</span>
+<span class="kw">&lt;/script&gt;</span></code></pre>
+</section><section id="practice-2" class="slide level2">
+<h1>Practice (2)</h1>
+<ul>
+<li>Explain what this code is doing</li>
+</ul>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">(<span class="kw">function</span>() {
+  <span class="ot">document</span>.<span class="fu">forms</span>[<span class="dv">0</span>].<span class="fu">onsubmit</span> = <span class="kw">function</span> (event) {
+  <span class="kw">var</span> text = <span class="ot">event</span>.<span class="ot">target</span>.<span class="fu">elements</span>[<span class="dv">0</span>].<span class="ot">value</span>.<span class="fu">trim</span>();
+  <span class="kw">if</span> (text) {
+    <span class="kw">var</span> template = <span class="ot">document</span>.<span class="fu">querySelector</span>(<span class="st">&#39;template&#39;</span>).<span class="fu">innerHTML</span>;
+    <span class="kw">var</span> message = <span class="ot">template</span>.<span class="fu">replace</span>(<span class="ot">/{name}/</span>, text);
+    <span class="kw">var</span> responsePage = <span class="ot">document</span>.<span class="fu">querySelector</span>(<span class="st">&#39;#response&#39;</span>);
+    <span class="ot">responsePage</span>.<span class="fu">innerHTML</span> = message;
+    <span class="ot">responsePage</span>.<span class="ot">style</span>.<span class="fu">display</span> = <span class="st">&#39;block&#39;</span>;
+    <span class="ot">event</span>.<span class="ot">target</span>.<span class="ot">style</span>.<span class="fu">display</span> = <span class="st">&#39;none&#39;</span>;
+  }
+  <span class="ot">event</span>.<span class="fu">preventDefault</span>();
+  }  
+})()</code></pre>
+</section><section id="practice-3" class="slide level2">
+<h1>Practice (3)</h1>
+<ul>
+<li>Run <a href="./examples/1.1-trivial-spa.html">1.1-trivial-spa.html</a></li>
+<li>Implement a &quot;back to the first&quot; page link</li>
+</ul>
 </section></section>
 <section><section id="templating" class="titleslide slide level1"><h1>Templating</h1></section><section id="logic-less-style" class="slide level2">
 <h1>&quot;Logic-less&quot; style</h1>
@@ -180,10 +221,11 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 </section><section id="practice" class="slide level2">
 <h1>Practice</h1>
 <ol type="1">
-<li class="fragment">Create a simple &quot;hello world&quot; app using an underscore template.</li>
-<li class="fragment">Merge some data into the template and add to the page.</li>
-<li class="fragment">(Extra) Create an array and render all the elements.</li>
-<li class="fragment">(Extra) Render nested objects.</li>
+<li>Create a simple &quot;hello world&quot; app using an <a href="http://documentcloud.github.io/underscore/#template">underscore.js</a> template.</li>
+<li>Merge some data into the template and add to the page.</li>
+<li>Create an array and render all the elements.</li>
+<li>Render nested objects.</li>
+<li>(Extra) Try with a logic-less library such as <a href="http://akdubya.github.io/dustjs/">dust.js</a></li>
 </ol>
 </section></section>
 <section><section id="routing-and-history" class="titleslide slide level1"><h1>Routing and History</h1></section><section id="the-challenge-with-urls" class="slide level2">
@@ -294,6 +336,12 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
   <span class="ot">window</span>.<span class="ot">history</span>.<span class="fu">replaceState</span>(values);
   <span class="fu">draw</span>(values);
 }</code></pre>
+</section><section id="practice-4" class="slide level2">
+<h1>Practice</h1>
+<ol type="1">
+<li>Add history tracking to your simple two-page SPA (a fragment ID for each screen)</li>
+<li>Can you implement bookmarks with the user's name?</li>
+</ol>
 </section></section>
 <section><section id="spas-via-backbone.js" class="titleslide slide level1"><h1>SPAs via backbone.js</h1></section><section id="backbone.js" class="slide level2">
 <h1>backbone.js</h1>

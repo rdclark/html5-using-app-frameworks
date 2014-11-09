@@ -70,6 +70,50 @@ Hi there. What is your name? <input type=text>
     - `screen.classList.add('current')`
     - `screen.classList.remove('current')`
 
+## Practice (1)
+
+> - Identify the screens in this page. What are your options for showing and hiding?
+
+```html
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>A Trivial Single-Page App</title>
+<form id=request>
+Hi there. What is your name? <input type=text autofocus>
+</form>
+<div id=response style="display:none" />
+<template style="display:none">Welcome, {name}!</template>
+<script>
+// See next slide
+</script>
+```
+
+## Practice (2)
+
+> - Explain what this code is doing
+
+```javascript
+(function() {
+  document.forms[0].onsubmit = function (event) {
+  var text = event.target.elements[0].value.trim();
+  if (text) {
+    var template = document.querySelector('template').innerHTML;
+    var message = template.replace(/{name}/, text);
+    var responsePage = document.querySelector('#response');
+    responsePage.innerHTML = message;
+    responsePage.style.display = 'block';
+    event.target.style.display = 'none';
+  }
+  event.preventDefault();
+  }  
+})()
+```
+
+## Practice (3)
+
+> - Run [1.1-trivial-spa.html](./examples/1.1-trivial-spa.html)
+> - Implement a "back to the first" page link
+
 # Templating
 
 ## "Logic-less" style
@@ -131,10 +175,11 @@ window.onload = function() {
 
 ## Practice
 
-1. Create a simple "hello world" app using an underscore template.
-2. Merge some data into the template and add to the page.
-3. (Extra) Create an array and render all the elements.
-4. (Extra) Render nested objects.
+> 1. Create a simple "hello world" app using an [underscore.js](http://documentcloud.github.io/underscore/#template) template.
+> 2. Merge some data into the template and add to the page.
+> 3. Create an array and render all the elements.
+> 4. Render nested objects.
+> 5. (Extra) Try with a logic-less library such as [dust.js](http://akdubya.github.io/dustjs/)
 
 # Routing and History
 
@@ -164,7 +209,6 @@ window.onload = function() {
 - `window.location` or `window.location.hash` (preferred)
 - `window.pushState(data, description, url)` (HTML5)
 - `window.replaceState(data, description, url)` (HTML5)
-
 
 ## Capturing URL changes
 
@@ -235,6 +279,11 @@ window.onload = function() {
   draw(values);
 }
 ```
+
+## Practice
+
+> 1. Add history tracking to your simple two-page SPA (a fragment ID for each screen)
+> 2. Can you implement bookmarks with the user's name?
 
 # SPAs via backbone.js
 
