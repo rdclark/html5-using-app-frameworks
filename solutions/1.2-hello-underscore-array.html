@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<title>Hello, Underscore!</title>
+<div id="result">
+</div>
+<script src="../examples/lib/underscore.js"></script>
+<script>
+window.onload = function () {
+  var names = ["Alice", "Bob", "Charlie"];
+  var renderName = _.template("<li><%- name %>");
+  var listItems = names.map(
+    function (name) { return renderName({name: (name)})
+  });
+  var html = _.template(
+    "The names are:<ul><%= items.join('') %></ul>", {items: (listItems)});
+  document.querySelector('#result').innerHTML = html;
+}
+</script>
+
+<!-- Template documentation: http://underscorejs.org/#template
+
+/*
+1. Create a simple "hello world" app using an underscore.js template.
+2. Merge some data into the template and add to the page.
+3. Create an array and render all the elements.
+4. (Extra) Render nested objects.
+5. (Extra) Try with a logic-less library such as dust.js
+*/
+-->

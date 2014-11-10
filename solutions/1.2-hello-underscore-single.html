@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<title>Hello, Underscore!</title>
+<div id="result">
+</div>
+<script src="../examples/lib/underscore.js"></script>
+<script>
+window.onload = function () {
+  var html = _.template("Hello, my name is <%- name %>!", {name: "Richard"});
+  document.querySelector('#result').innerHTML = html;
+}
+</script>
+
+<!--
+1. Create a simple "hello world" app using an underscore.js template.
+2. Merge some data into the template and add to the page.
+3. Create an array and render all the elements.
+4. Render nested objects.
+5. (Extra) Try with a logic-less library such as dust.js
+-->
