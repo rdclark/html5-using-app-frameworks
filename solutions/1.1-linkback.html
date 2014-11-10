@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>A Trivial Single-Page App</title>
+<form id=request>
+Hi there. What is your name? <input type=text autofocus>
+</form>
+<div id=response style="display:none">
+  <span></span>
+  <a href="#">Go back</a>
+</div>
+<template style="display:none">Welcome, {name}!</template>
+<script>
+(function() {
+  var requestPage = document.forms[0];
+  var responsePage = document.querySelector('#response');
+
+  function showResponse(responding) {
+    responsePage.style.display = responding ? 'block' : 'none';
+    requestPage.style.display = responding ? 'none' : 'block';
+  }
+
+  responsePage.querySelector('a').onclick = function() {
+    showResponse(false);
+  }
+
+  requestPage.onsubmit = function (event) {
+    event.preventDefault();
+  	var text = event.target.elements[0].value.trim();
+  	if (!text) return;
+    var template = document.querySelector('template').innerHTML;
+    var message = template.replace(/{name}/, text);
+    responsePage.querySelector('span').innerHTML = message;
+    showResponse(true);
+  }
+
+})()
+</script>
