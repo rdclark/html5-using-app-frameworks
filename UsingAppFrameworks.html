@@ -121,9 +121,7 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 </ul>
 </section><section id="practice-1" class="slide level2">
 <h1>Practice (1)</h1>
-<ul>
-<li>Identify the screens in this page. What are your options for showing and hiding?</li>
-</ul>
+<p>Identify the screens in this page. What are your options for showing and hiding?</p>
 <pre class="sourceCode html"><code class="sourceCode html"><span class="dt">&lt;!DOCTYPE </span>html<span class="dt">&gt;</span>
 <span class="kw">&lt;meta</span><span class="ot"> charset=</span><span class="st">utf-8</span><span class="kw">&gt;</span>
 <span class="kw">&lt;title&gt;</span>A Trivial Single-Page App<span class="kw">&lt;/title&gt;</span>
@@ -137,9 +135,7 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 <span class="kw">&lt;/script&gt;</span></code></pre>
 </section><section id="practice-2" class="slide level2">
 <h1>Practice (2)</h1>
-<ul>
-<li>Explain what this code is doing</li>
-</ul>
+<p>Explain what this code is doing</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">(<span class="kw">function</span>() {
   <span class="ot">document</span>.<span class="fu">forms</span>[<span class="dv">0</span>].<span class="fu">onsubmit</span> = <span class="kw">function</span> (event) {
   <span class="kw">var</span> text = <span class="ot">event</span>.<span class="ot">target</span>.<span class="fu">elements</span>[<span class="dv">0</span>].<span class="ot">value</span>.<span class="fu">trim</span>();
@@ -156,10 +152,10 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 })()</code></pre>
 </section><section id="practice-3" class="slide level2">
 <h1>Practice (3)</h1>
-<ul>
+<ol type="1">
 <li>Run <a href="./examples/1.1-trivial-spa.html">1.1-trivial-spa.html</a></li>
 <li>Implement a &quot;back to the first&quot; page link</li>
-</ul>
+</ol>
 </section></section>
 <section><section id="templating" class="titleslide slide level1"><h1>Templating</h1></section><section id="logic-less-style" class="slide level2">
 <h1>&quot;Logic-less&quot; style</h1>
@@ -173,12 +169,7 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 </ul>
 </section><section id="with-embedded-logic" class="slide level2">
 <h1>With embedded logic</h1>
-<ul>
-<li>JSP/ERB style
-<ul>
-<li><a href="http://documentcloud.github.io/underscore/#template">underscore.js</a>: <code>Hello, my name is &lt;%- name %&gt;</code></li>
-</ul></li>
-</ul>
+<p>JSP/ERB style - <a href="http://documentcloud.github.io/underscore/#template">underscore.js</a>: <code>Hello, my name is &lt;%- name %&gt;</code></p>
 </section><section id="how-templates-work" class="slide level2">
 <h1>How templates work</h1>
 <ol type="1">
@@ -518,9 +509,7 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 });</code></pre>
 </section><section id="rendering-the-collection" class="slide level2">
 <h1>Rendering the collection</h1>
-<ul>
-<li>Wrap the table in a template</li>
-</ul>
+<p>Wrap the table in a template</p>
 <pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/template&quot;</span><span class="ot"> id=</span><span class="st">&quot;portfolio-template&quot;</span><span class="kw">&gt;</span>
   &lt;table&gt;
       &lt;thead&gt;
@@ -643,9 +632,7 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 });</code></pre>
 </section><section id="processing-the-data" class="slide level2">
 <h1>Processing the data</h1>
-<ul>
-<li>In AppView</li>
-</ul>
+<p>In AppView</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">  initialize: <span class="kw">function</span> () {
       <span class="kw">var</span> stockTable = <span class="kw">this</span>.<span class="ot">$el</span>.<span class="fu">find</span>(<span class="st">&#39;#stocks&#39;</span>);
       <span class="kw">var</span> newTable = <span class="ot">PortfolioView</span>.<span class="fu">render</span>().<span class="fu">el</span>;
@@ -670,9 +657,7 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
   },</code></pre>
 </section><section id="parsing-the-message" class="slide level2">
 <h1>Parsing the message</h1>
-<ul>
-<li>In Stock class</li>
-</ul>
+<p>In Stock class</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript">  <span class="co">// The usual parse function is handed a JSON response and merely returns it.</span>
   <span class="co">// We&#39;re getting a colon-delimited string.</span>
   parse: <span class="kw">function</span> (text) {
@@ -696,6 +681,156 @@ Hi there. What is your name? <span class="kw">&lt;input</span><span class="ot"> 
 <li>Hint: The <a href="https://github.com/rdclark/neighhborhood">Neighborhood</a> sample app implements this search using jQuery's AJAX support. See <a href="https://github.com/rdclark/neighhborhood/blob/master/js/geo_CORS.js">js/geo_CORS.js</a></li>
 </ul></li>
 </ol>
+</section></section>
+<section><section id="extra-javascript-promises" class="titleslide slide level1"><h1>Extra: Javascript Promises</h1></section><section id="promises-simplify-asynchronous-code" class="slide level2">
+<h1>Promises simplify asynchronous code</h1>
+<p>Before:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="fu">step1</span>(<span class="kw">function</span> (value1) {
+    <span class="fu">step2</span>(value1, <span class="kw">function</span>(value2) {
+        <span class="fu">step3</span>(value2, <span class="kw">function</span>(value3) {
+            <span class="fu">step4</span>(value3, <span class="kw">function</span>(value4) {
+                <span class="co">// Do something with value4</span>
+            });
+        });
+    });
+});</code></pre>
+</section><section id="with-promises-using-q" class="slide level2">
+<h1>With promises (using Q)</h1>
+<p>Using the <a href="https://github.com/kriskowal/q">Q</a> library</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="ot">Q</span>.<span class="fu">fcall</span>(promisedStep1)
+.<span class="fu">then</span>(promisedStep2)
+.<span class="fu">then</span>(promisedStep3)
+.<span class="fu">then</span>(promisedStep4)
+.<span class="fu">then</span>(<span class="kw">function</span> (value4) {
+    <span class="co">// Do something with value4</span>
+})
+.<span class="fu">catch</span>(<span class="kw">function</span> (error) {
+    <span class="co">// Handle any error from all above steps</span>
+})
+.<span class="fu">done</span>();</code></pre>
+</section><section id="networking-without-promises" class="slide level2">
+<h1>Networking without promises</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> ws = <span class="kw">new</span> <span class="fu">WebSocket</span>(<span class="st">&quot;ws://echo.websocket.org&quot;</span>);
+<span class="ot">ws</span>.<span class="fu">onopen</span> = <span class="kw">function</span>() {
+  <span class="ot">ws</span>.<span class="fu">send</span>(<span class="st">&quot;I hear an echo&quot;</span>);
+}
+
+<span class="ot">ws</span>.<span class="fu">onerror</span> = <span class="kw">function</span>(err) {
+  <span class="ot">console</span>.<span class="fu">log</span>(<span class="ot">err</span>.<span class="fu">data</span>);
+  <span class="ot">ws</span>.<span class="fu">close</span>();
+}
+
+<span class="ot">ws</span>.<span class="fu">onmessage</span> = <span class="kw">function</span>(evt) {
+  <span class="ot">console</span>.<span class="fu">log</span>(<span class="ot">evt</span>.<span class="fu">data</span>);
+}
+
+<span class="kw">function</span> <span class="fu">send</span>(message) {
+  <span class="ot">ws</span>.<span class="fu">send</span>(message):
+}</code></pre>
+</section><section id="easier-networking-with-promises" class="slide level2">
+<h1>Easier networking with promises</h1>
+<p>I would like to do this:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">  <span class="fu">open</span>(<span class="st">&quot;ws://echo.websocket.org&quot;</span>)
+    .<span class="fu">then</span>(<span class="fu">send</span>(<span class="st">&quot;hello, world&quot;</span>))
+    .<span class="fu">then</span>(read)
+    .<span class="fu">then</span>(print)
+    .<span class="fu">catch</span>(<span class="kw">function</span>(error) {
+       <span class="ot">console</span>.<span class="fu">log</span>(<span class="st">&quot;ERROR &quot;</span> + error)
+     })
+    .<span class="fu">finally</span>(close);</code></pre>
+</section><section id="wrapping-websocket-in-promises" class="slide level2">
+<h1>Wrapping WebSocket in promises</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="fu">open</span>(wsurl) {
+  <span class="kw">return</span> <span class="kw">new</span> <span class="ot">Q</span>.<span class="fu">Promise</span>(resolve, reject) {
+    <span class="kw">var</span> ws = <span class="kw">new</span> <span class="fu">WebSocket</span>(wsurl);
+
+    <span class="ot">ws</span>.<span class="fu">onopen</span> = <span class="kw">function</span>() {
+      <span class="fu">resolve</span>(ws);
+    }
+
+    <span class="ot">ws</span>.<span class="fu">onerror</span> = <span class="kw">function</span>(err) {
+      <span class="fu">reject</span>(<span class="kw">new</span> <span class="fu">Error</span>(<span class="ot">err</span>.<span class="fu">data</span>));
+    }
+}</code></pre>
+<p>Usage:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">  <span class="fu">open</span>(<span class="st">&quot;ws://echo.websocket.org&quot;</span>).<span class="fu">then</span>(...</code></pre>
+</section><section id="waiting-for-an-event" class="slide level2">
+<h1>Waiting for an event</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="fu">read</span>(ws) {
+  <span class="kw">return</span> <span class="kw">new</span> <span class="ot">Q</span>.<span class="fu">Promise</span>(resolve) {
+
+    <span class="ot">ws</span>.<span class="fu">onmessage</span> = <span class="kw">function</span>(evt) {
+      <span class="fu">resolve</span>(<span class="ot">evt</span>.<span class="fu">data</span>);
+    }
+  }
+}</code></pre>
+</section><section id="utility-functions" class="slide level2">
+<h1>Utility functions</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="fu">close</span>(ws) { <span class="ot">ws</span>.<span class="fu">close</span>() };
+
+<span class="kw">function</span> <span class="fu">send</span>(message) <span class="kw">return</span> { <span class="kw">function</span>(ws) { <span class="ot">ws</span>.<span class="fu">send</span>(message); <span class="kw">return</span> ws }};
+
+<span class="kw">function</span> <span class="fu">print</span>(message) {
+  <span class="ot">console</span>.<span class="fu">log</span>(message);
+}</code></pre>
+</section><section id="theres-a-problem" class="slide level2">
+<h1>There's a problem</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">  <span class="fu">open</span>(<span class="st">&quot;ws://echo.websocket.org&quot;</span>) <span class="co">// returns ws</span>
+    .<span class="fu">then</span>(<span class="fu">send</span>(<span class="st">&quot;hello, world&quot;</span>))   <span class="co">// consumes ws, returns ws</span>
+    .<span class="fu">then</span>(read)                   <span class="co">// consumes ws, returns string/binary</span>
+    .<span class="fu">then</span>(print)                  <span class="co">// consumes string/binary, returns nothing</span>
+    .<span class="fu">catch</span>(<span class="kw">function</span>(error) {
+       <span class="ot">console</span>.<span class="fu">log</span>(<span class="st">&quot;ERROR &quot;</span> + error)
+     })
+    .<span class="fu">finally</span>(close);              <span class="co">// consumes ws...which may not be available!</span></code></pre>
+</section><section id="one-way-to-resolve-this" class="slide level2">
+<h1>One way to resolve this</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">  <span class="kw">var</span> socket;
+  <span class="fu">open</span>(<span class="st">&quot;ws://echo.websocket.org&quot;</span>)
+    .<span class="fu">then</span>(<span class="kw">function</span>(ws) { socket = ws }) <span class="co">// returns socket as a side-effect</span>
+    .<span class="fu">then</span>(<span class="fu">send</span>(<span class="st">&quot;hello, world&quot;</span>))         <span class="co">// and send uses that</span>
+    .<span class="fu">then</span>(read)                         <span class="co">// so does read</span>
+    .<span class="fu">then</span>(print)
+    .<span class="fu">catch</span>(<span class="kw">function</span>(error) {
+       <span class="ot">console</span>.<span class="fu">log</span>(<span class="st">&quot;ERROR &quot;</span> + error)
+     })
+    .<span class="fu">finally</span>(<span class="kw">function</span>() {
+       <span class="kw">if</span> (socket) <span class="ot">socket</span>.<span class="fu">close</span>();
+     });</code></pre>
+</section><section id="when-to-use-promises" class="slide level2">
+<h1>When to use promises?</h1>
+<ul>
+<li class="fragment">Talking to external services (e.g. via AJAX)</li>
+<li class="fragment">Local operations that take time (e.g. image loading)</li>
+</ul>
+</section><section id="image-loading-example" class="slide level2">
+<h1>Image loading example</h1>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="fu">getImage</span>(url) {
+
+  <span class="kw">return</span> <span class="kw">new</span> <span class="ot">Q</span>.<span class="fu">Promise</span>(resolve, reject) {
+    <span class="kw">var</span> image = <span class="kw">new</span> <span class="fu">Image</span>(url);
+    <span class="ot">image</span>.<span class="fu">onload</span> = <span class="kw">function</span>() {
+      <span class="fu">resolve</span>(image);
+    }
+    <span class="ot">image</span>.<span class="fu">onerror</span> = <span class="kw">function</span>(err) {
+      <span class="fu">reject</span>(err);
+    }
+  }
+}</code></pre>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">  <span class="fu">getImage</span>(<span class="st">&quot;./button.png&quot;</span>).<span class="fu">then</span>(<span class="kw">function</span>(image) { ... });</code></pre>
+</section><section id="other-promise-tricks" class="slide level2">
+<h1>Other promise tricks</h1>
+<ol type="1">
+<li><code>promise.all([array of functions])</code> acts like <code>map</code>, runs all concurrently.</li>
+<li>Serial actions:</li>
+</ol>
+<pre class="sourceCode javascript"><code class="sourceCode javascript">  <span class="kw">var</span> messages = [<span class="st">&quot;Hello&quot;</span>, <span class="st">&quot;goodbye&quot;</span>];
+  <span class="ot">messages</span>.<span class="fu">reduce</span>(
+    <span class="kw">function</span>(ws, msg) {
+      <span class="ot">ws</span>.<span class="fu">send</span>(message); <span class="kw">return</span> ws
+    },
+    <span class="fu">open</span>(<span class="st">&quot;ws://echo.websocket.org&quot;</span>)
+  )</code></pre>
 </section></section>
 <section><section id="thank-you" class="titleslide slide level1"><h1>Thank you!</h1></section><section id="making-contact" class="slide level2">
 <h1>Making contact</h1>

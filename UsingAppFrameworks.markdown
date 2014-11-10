@@ -72,7 +72,7 @@ Hi there. What is your name? <input type=text>
 
 ## Practice (1)
 
-> - Identify the screens in this page. What are your options for showing and hiding?
+Identify the screens in this page. What are your options for showing and hiding?
 
 ```html
 <!DOCTYPE html>
@@ -90,7 +90,7 @@ Hi there. What is your name? <input type=text autofocus>
 
 ## Practice (2)
 
-> - Explain what this code is doing
+Explain what this code is doing
 
 ```javascript
 (function() {
@@ -111,8 +111,8 @@ Hi there. What is your name? <input type=text autofocus>
 
 ## Practice (3)
 
-> - Run [1.1-trivial-spa.html](./examples/1.1-trivial-spa.html)
-> - Implement a "back to the first" page link
+> 1. Run [1.1-trivial-spa.html](./examples/1.1-trivial-spa.html)
+> 2. Implement a "back to the first" page link
 
 # Templating
 
@@ -125,7 +125,7 @@ Hi there. What is your name? <input type=text autofocus>
 
 ## With embedded logic
 
->+ JSP/ERB style
+JSP/ERB style
     - [underscore.js](http://documentcloud.github.io/underscore/#template): `Hello, my name is <%- name %>`
 
 ## How templates work
@@ -318,6 +318,7 @@ window.onload = function() {
 <script src="lib/backbone.js"></script>
 <script>/* Next slide */</script>
 ```
+
 ## Our first example, in Backbone (JS)
 
 ```javascript
@@ -469,7 +470,9 @@ var StockView = Backbone.View.extend({
 ```
 
 ## Rendering the collection
-> - Wrap the table in a template
+
+Wrap the table in a template
+
 ```html
 <script type="text/template" id="portfolio-template">
   <table>
@@ -599,7 +602,7 @@ _.extend(JMSHandler.prototype, Backbone.Events, {
 
 ## Processing the data
 
-> + In AppView
+In AppView
 
 ```javascript
   initialize: function () {
@@ -629,7 +632,7 @@ _.extend(JMSHandler.prototype, Backbone.Events, {
 
 ## Parsing the message
 
-> + In Stock class
+In Stock class
 
 ```javascript
   // The usual parse function is handed a JSON response and merely returns it.
@@ -653,6 +656,199 @@ _.extend(JMSHandler.prototype, Backbone.Events, {
 > 2. Create a page with a button. Show the number of clicks
 > 3. [Getnames.org](http://www.geonames.org) implements a search page that returns JSON. Write your own front-end for it.
     - Hint: The [Neighborhood](https://github.com/rdclark/neighhborhood) sample app implements this search using jQuery's AJAX support. See [js/geo_CORS.js](https://github.com/rdclark/neighhborhood/blob/master/js/geo_CORS.js)
+
+# Extra: Javascript Promises
+
+## Promises simplify asynchronous code
+
+Before:
+```javascript
+step1(function (value1) {
+    step2(value1, function(value2) {
+        step3(value2, function(value3) {
+            step4(value3, function(value4) {
+                // Do something with value4
+            });
+        });
+    });
+});
+```
+
+## With promises (using Q)
+
+Using the [Q](https://github.com/kriskowal/q) library
+
+```javascript
+Q.fcall(promisedStep1)
+.then(promisedStep2)
+.then(promisedStep3)
+.then(promisedStep4)
+.then(function (value4) {
+    // Do something with value4
+})
+.catch(function (error) {
+    // Handle any error from all above steps
+})
+.done();
+```
+
+## Networking without promises
+
+```javascript
+var ws = new WebSocket("ws://echo.websocket.org");
+ws.onopen = function() {
+  ws.send("I hear an echo");
+}
+
+ws.onerror = function(err) {
+  console.log(err.data);
+  ws.close();
+}
+
+ws.onmessage = function(evt) {
+  console.log(evt.data);
+}
+
+function send(message) {
+  ws.send(message):
+}
+
+```
+
+## Easier networking with promises
+
+I would like to do this:
+
+```javascript
+  open("ws://echo.websocket.org")
+    .then(send("hello, world"))
+    .then(read)
+    .then(print)
+    .catch(function(error) {
+       console.log("ERROR " + error)
+     })
+    .finally(close);
+
+```
+
+## Wrapping WebSocket in promises
+
+```javascript
+function open(wsurl) {
+  return new Q.Promise(resolve, reject) {
+    var ws = new WebSocket(wsurl);
+
+    ws.onopen = function() {
+      resolve(ws);
+    }
+
+    ws.onerror = function(err) {
+      reject(new Error(err.data));
+    }
+}
+```
+Usage:
+```javascript
+  open("ws://echo.websocket.org").then(...
+```
+
+## Waiting for an event
+
+```javascript
+function read(ws) {
+  return new Q.Promise(resolve) {
+
+    ws.onmessage = function(evt) {
+      resolve(evt.data);
+    }
+  }
+}
+```
+
+## Utility functions
+
+```javascript
+function close(ws) { ws.close() };
+
+function send(message) return { function(ws) { ws.send(message); return ws }};
+
+function print(message) {
+  console.log(message);
+}
+```
+
+## There's a problem
+
+```javascript
+  open("ws://echo.websocket.org") // returns ws
+    .then(send("hello, world"))   // consumes ws, returns ws
+    .then(read)                   // consumes ws, returns string/binary
+    .then(print)                  // consumes string/binary, returns nothing
+    .catch(function(error) {
+       console.log("ERROR " + error)
+     })
+    .finally(close);              // consumes ws...which may not be available!
+
+```
+
+## One way to resolve this
+
+```javascript
+  var socket;
+  open("ws://echo.websocket.org")
+    .then(function(ws) { socket = ws }) // returns socket as a side-effect
+    .then(send("hello, world"))   		// and send uses that
+    .then(read)							// so does read
+    .then(print)
+    .catch(function(error) {
+       console.log("ERROR " + error)
+     })
+    .finally(function() {
+       if (socket) socket.close();
+     });
+
+```
+
+## When to use promises?
+
+- Talking to external services (e.g. via AJAX)
+- Local operations that take time (e.g. image loading)
+
+## Image loading example
+
+```javascript
+function getImage(url) {
+
+  return new Q.Promise(resolve, reject) {
+    var image = new Image(url);
+    image.onload = function() {
+      resolve(image);
+    }
+    image.onerror = function(err) {
+      reject(err);
+    }
+  }
+}
+```
+
+```javascript
+  getImage("./button.png").then(function(image) { ... });
+```
+
+## Other promise tricks
+
+> 1. `promise.all([array of functions])` acts like `map`, runs all concurrently.
+> 2. Serial actions:
+
+```javascript
+  var messages = ["Hello", "goodbye"];
+  messages.reduce(
+    function(ws, msg) {
+      ws.send(message); return ws
+    },
+    open("ws://echo.websocket.org")
+  )
+```
 
 # Thank you!
 
